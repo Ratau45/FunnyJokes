@@ -1,6 +1,9 @@
 import * as React from 'react';
 import axios from 'axios';
 import "../App.css";
+import "./SocialCard.css"
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 
@@ -16,24 +19,36 @@ export default function Categories() {
   React.useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
-      const res = await axios.get(`https://localhost:7272/search?query=${query}`);
+      const res = await axios.get(`/search?query=${query}`);
       setData(res.data);
-      setChuck(res.data.chuckApiReponse.result);
-      setSwapi(res.data.swapiApiResponse.results);
+      setChuck(res.data.chuckApiReponse);
+      setSwapi(res.data.swapiApiResponse);
       setLoading(false);
       
     };
-    if (query.length === 0 || query.length > 2) fetchData();
+    if (query.length === 0 || query.length > 1) fetchData();
     
   }, [query]);
 
+const theme = createTheme();
+theme.typography.h3 = {
+  fontSize: '1.2rem',
+  fontFamily:'Roboto',
+  '@media (min-width:600px)': {
+    fontSize: '1.5rem',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '2rem',
+  },
+}
+
  
   function Final() {
-
-    if (chuck ==="null") {
-  
+let e = swapi.count;
+    if (e !== 0) {
+  let r = swapi.results
       return(
-        (swapi.map((user, index) => (
+        (r?.map((user, index) => (
           <div className="card" key={index}>
           <div className="card__title">Name :{user.name}</div>
           <div className="card__body">
@@ -51,18 +66,19 @@ export default function Categories() {
          )))
       )
     } else{
+      let dd = chuck.result
       return(
-      (chuck.map((user, index) => (
+      (dd?.map((user, index) => (
         <div className="card" key={index}>
         <div className="card__title">Catergory :{query}</div>
         <div className="card__body">
         <div className="paragraph">
             <p>Joke : {user.value}</p>
-            <p> Date of Birth :{user.birth_Year}</p>
+          
         </div>
         <div className="p">
         <p> Last Update :{user.updated_At}</p>
-        <p> Mass :{user.mass}</p>
+        
         </div>
         </div>
       
@@ -75,11 +91,13 @@ export default function Categories() {
 
   return (
     <div>
-      
+       <ThemeProvider theme={theme}>
+      <Typography variant="h3" align="center">Welcome To Funny Joke VS Star Wars</Typography>
+    </ThemeProvider>
       <div className="App">
-      <h1>Search</h1>
       
-      <input className="search-box"  onChange={(e) => setQuery(e.target.value)}  placeholder="Search..."/>
+      
+      <input className="search-box"  onChange={(e) => setQuery(e.target.value)}  placeholder="Search Category Or Star War Name..."/>
      
     
       </div>

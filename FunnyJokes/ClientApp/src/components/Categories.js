@@ -1,13 +1,14 @@
 import * as React from 'react';
 import axios from 'axios';
-import "../App.css";
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
-
+import Card from 'react-bootstrap/Card';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,6 +27,18 @@ function getStyles(name, personName, theme) {
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
+}
+
+const theme = createTheme();
+theme.typography.h3 = {
+  fontSize: '1.2rem',
+  fontFamily:'Roboto',
+  '@media (min-width:600px)': {
+    fontSize: '1.5rem',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '2rem',
+  },
 }
 
 export default function Categories() {
@@ -52,7 +65,7 @@ export default function Categories() {
   React.useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
-      const res = await axios.get(`https://localhost:7272/search?query=${query}`);
+      const res = await axios.get(`/search?query=${query}`);
       setData(res.data);
       setChuck(res.data.chuckApiReponse.result);
       setLoading(false);
@@ -66,9 +79,11 @@ export default function Categories() {
   
   return (
     <div>
-
+<ThemeProvider theme={theme}>
+      <Typography variant="h3" align="center">Laugh A little With Chuck Norris</Typography>
+    </ThemeProvider>
       <div className="App">
-      <h1>Choose Category</h1>
+      
       <FormControl sx={{ m: 1, width: 800, mt: 3 }}>
       <InputLabel id="demo-multiple-name-label">Choose Category</InputLabel>
       <Select
@@ -98,23 +113,23 @@ export default function Categories() {
       {loading ? (
                     <h4>Loading...</h4>) : 
       <div className="cards-container">
-        
         {(chuck.map((user, index) => (
-        <div className="card" key={index}>
-        <div className="card__title">Catergory :{query}</div>
-        <div className="card__body">
-        <div className="paragraph">
-            <p>Joke : {user.value}</p>
-            <p> Date of Birth :{user.birth_Year}</p>
-        </div>
-        <div className="p">
-        <p> Last Update :{user.updated_At}</p>
-        <p> Created At :{user.created_At}</p>
-        </div>
-        </div>
+       <Card style={{ width: '30rem' }} key={index}  border="primary">
+      <Card.Body>
       
-      </div>
+        <Card.Title>Category</Card.Title>
+        <Card.Subtitle className="mb-2 text-muted">{query}</Card.Subtitle>
+        <Card.Text>
+          {user.value}
+        </Card.Text>
+        <Card.Text className="mb-2 text-muted">Updated At :{user.updated_At}</Card.Text>
+        <Card.Text className="mb-2 text=muted">Created At :{user.created_At}</Card.Text>
+      </Card.Body>
+    </Card>
         )))}
+
+
+       
       </div>
      //       {console.log([chuck.result])}
 
